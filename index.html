@@ -1,70 +1,77 @@
-  <!DOCTYPE html>                                                                                                                                
-  <html lang="en">
-  <head>                                                                                                                                         
-    <meta charset="UTF-8">                                                                                                                     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FamJamMemes</title>
-    <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; }
-      header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid #facc15; }
-      header h1 { font-size: 2.2em; color: #facc15; }
-      header p { color: #aaa; margin-top: 6px; font-size: 1em; }
-      .hero { text-align: center; padding: 60px 20px; max-width: 700px; margin: 0 auto; }
-      .hero h2 { font-size: 1.8em; color: #fff; margin-bottom: 16px; }
-      .hero p { color: #999; font-size: 1.1em; line-height: 1.7; margin-bottom: 12px; }
-      .platforms { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 30px 0; }
-      .platform { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 24px; font-size: 0.95em; color: #ccc; }
-      .links { text-align: center; padding: 30px 20px; border-top: 1px solid #222; }
-      .links a { color: #facc15; text-decoration: none; margin: 0 16px; font-size: 0.95em; }
-      .links a:hover { text-decoration: underline; }
-      footer { text-align: center; padding: 20px; color: #555; font-size: 0.85em; }
-      .platform { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 24px; font-size: 0.95em; color: #ccc;
-  text-decoration: none; }
-  .platform:hover { border-color: #facc15; color: #facc15; 
-    </style>
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamJamMemes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; }
+    header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid #facc15; }
+    header h1 { font-size: 2.2em; color: #facc15; }
+    header p { color: #aaa; margin-top: 6px; font-size: 1em; }
+    .hero { text-align: center; padding: 60px 20px; max-width: 700px; margin: 0 auto; }
+    .hero h2 { font-size: 1.8em; color: #fff; margin-bottom: 16px; }
+    .hero p { color: #999; font-size: 1.1em; line-height: 1.7; margin-bottom: 12px; }
+    .platforms { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 30px 0; }
+    .platform { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 24px;
+                font-size: 0.95em; color: #ccc; text-decoration: none; }
+    .platform:hover { border-color: #facc15; color: #facc15; }
+    .links { text-align: center; padding: 30px 20px; border-top: 1px solid #222; }
+    .links a { color: #facc15; text-decoration: none; margin: 0 16px; font-size: 0.95em; }
+    .links a:hover { text-decoration: underline; }
+    footer { text-align: center; padding: 20px; color: #555; font-size: 0.85em; }
+    #auth-relay { background:#1a1a1a; color:#facc15; padding:20px; margin:20px;
+                  border-radius:8px; font-size:14px; text-align:center; }
+  </style>
+</head>
 
-  <script>                                                                                                                                       
-    const p = new URLSearchParams(window.location.search);                                                                                       
-    if (p.has('code') || p.has('error')) {                                                                                                       
-      const box = document.createElement('pre');                                                                                                 
-      box.style.cssText = 'background:#1a1a1a;color:#facc15;padding:20px;margin:20px;border-radius:8px;word-break:break-all;font-size:14px;';
-      box.textContent = 'FULL URL:\n' + window.location.href + '\n\nPARAMS:\n' + [...p.entries()].map(([k,v])=>k+'='+v).join('\n');
-      document.body.prepend(box);
-    }
-  </script>
-    
-  <body>
+<script>
+  // OAuth relay — platforms redirect here, we forward the code to the local auth server
+  const p = new URLSearchParams(window.location.search);
+  if (p.has('code') || p.has('error')) {
+    document.addEventListener('DOMContentLoaded', function () {
+      const relay = document.getElementById('auth-relay');
+      relay.style.display = 'block';
+      relay.textContent = 'Completing authentication, please wait…';
+    });
+    const local = new URL('http://localhost:8080/callback');
+    p.forEach((v, k) => local.searchParams.set(k, v));
+    window.location.href = local.toString();
+  }
+</script>
 
-    <header>
-      <h1>FamJamMemes 😂</h1>
-      <p>Your daily dose of memes, delivered automatically.</p>
-    </header>
+<body>
 
-    <div class="hero">
-      <h2>What is FamJamMemes?</h2>
-      <p>FamJamMemes is an automated content service that curates and publishes the best trending memes across social media platforms every
-  day.</p>
-      <p>We source top-performing content, add our branding, and share it with our audience on TikTok, Instagram, Facebook, and more.</p>
-      <p>No spam. No ads. Just memes.</p>
+  <div id="auth-relay" style="display:none"></div>
 
-  <div class="platforms">                                                                                                                        
-    <a class="platform" href="https://www.tiktok.com/@famjammemes" target="_blank">📱 TikTok</a>                                                 
-    <a class="platform" href="https://www.instagram.com/famjammemes" target="_blank">📸 Instagram</a>                                            
-    <a class="platform" href="https://www.facebook.com/profile.php?id=61570810324973" target="_blank">👍 Facebook</a>
-    <a class="platform" href="https://x.com/FamJamMemes" target="_blank">🐦 X (Twitter)</a>
+  <header>
+    <h1>FamJamMemes 😂</h1>
+    <p>Your daily dose of memes, delivered automatically.</p>
+  </header>
+
+  <div class="hero">
+    <h2>What is FamJamMemes?</h2>
+    <p>FamJamMemes is an automated content service that curates and publishes the best trending memes across social media platforms every day.</p>
+    <p>We source top-performing content, add our branding, and share it with our audience on TikTok, Instagram, Facebook, and more.</p>
+    <p>No spam. No ads. Just memes.</p>
+
+    <div class="platforms">
+      <a class="platform" href="https://www.tiktok.com/@famjammemes" target="_blank">📱 TikTok</a>
+      <a class="platform" href="https://www.instagram.com/famjammemes" target="_blank">📸 Instagram</a>
+      <a class="platform" href="https://www.facebook.com/profile.php?id=61570810324973" target="_blank">👍 Facebook</a>
+      <a class="platform" href="https://x.com/FamJamMemes" target="_blank">🐦 X (Twitter)</a>
+    </div>
   </div>
-    </div>
 
-    <div class="links">
-      <a href="/famjammemes/privacy-policy.html">Privacy Policy</a>
-      <a href="/famjammemes/terms.html">Terms of Service</a>
-    </div>
+  <div class="links">
+    <a href="/famjammemes/privacy-policy.html">Privacy Policy</a>
+    <a href="/famjammemes/terms.html">Terms of Service</a>
+  </div>
 
-    <footer>
-      &copy; 2026 FamJamMemes. All rights reserved.
-    </footer>
+  <footer>
+    &copy; 2026 FamJamMemes. All rights reserved.
+  </footer>
 
-  </body>
-  </html>
+</body>
+</html>
